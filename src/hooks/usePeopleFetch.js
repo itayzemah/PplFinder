@@ -18,11 +18,10 @@ export const usePeopleFetch = () => {
 
   async function fetchUsers() {
     setIsLoading(true);
-    const url = `https://randomuser.me/api/?results=25&page=${pageNumber}${nations.length !== 0 ? "&nat=" + nations.join() : ''}`;
+    const url = `https://randomuser.me/api/?results=5&page=${pageNumber}${nations.length !== 0 ? "&nat=" + nations.join() : ''}`;
     const response = await axios.get(url);
     setIsLoading(false);
-    console.log(`url`, url);
-    setUsers(response.data.results);
+    setUsers([...users, ...response.data.results]);
   }
 
   return { users, isLoading, fetchUsers };

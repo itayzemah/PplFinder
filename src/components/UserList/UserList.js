@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Text from "components/Text";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
@@ -10,7 +10,21 @@ import * as S from "./style";
 const UserList = ({ users, isLoading }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
   const dispatch = useDispatch();
-  const observer = useRef();
+  //https://www.youtube.com/watch?v=NZKUirTtxcg
+  const observer = useRef(); // not rendering the component
+  const lastUserElementRef = useCallback(node => {
+    if (observer.current) {
+      observer.current.disconnect();
+    }
+    observer.current = new IntersectionObserver(entries => {
+      // If the object is on ther screen right now
+      if (entries[0].isIntersecting) {
+        dispatch({ type: "INCREASE_PAGE_NUMBER" });
+      }
+    })
+    if (node) observer.current.observe(node);
+  }, []);
+
   const selectedUsers = useSelector((state) => {
     return state.users
   });

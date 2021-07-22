@@ -5,11 +5,11 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Home } from "pages";
 import { ThemeProvider } from "theme";
 import NavBar from "components/NavBar";
-import usersReducer from "redux/reducers/usersReducer"
+import favoriteUsersReducer from "redux/reducers/favoriteUsersReducer"
 import pageNumberReducer from "redux/reducers/pageNumberReducer"
 import nationsReducer from "redux/reducers/nationsReducer"
 
-const store = createStore(combineReducers({ users: usersReducer, pageNumber: pageNumberReducer, nationsArr: nationsReducer }));
+const store = createStore(combineReducers({ favoritesUsers: favoriteUsersReducer, pageNumber: pageNumberReducer, nationsArr: nationsReducer }));
 
 const AppRouter = () => {
   return (
