@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 export const usePeopleFetch = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedNations, setSelectedNations] = useState([]);
   const dispatch = useDispatch();
   const pageNumber = useSelector((state) => {
     return state.pageNumber
@@ -13,8 +14,12 @@ export const usePeopleFetch = () => {
     return state.nationsArr
   });
   useEffect(() => {
+    setSelectedNations(nations);
+  }, [nations]);
+
+  useEffect(() => {
     fetchUsers();
-  }, [pageNumber, nations]);
+  }, [pageNumber]);
 
   async function fetchUsers() {
     setIsLoading(true);

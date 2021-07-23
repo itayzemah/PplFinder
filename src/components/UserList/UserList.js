@@ -9,6 +9,7 @@ import * as S from "./style";
 
 const UserList = ({ users, isLoading }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
+  const [usersToDisplay, setUsersToDisplay] = useState(users);
   const dispatch = useDispatch();
   //https://www.youtube.com/watch?v=NZKUirTtxcg
   const observer = useRef(); // not rendering the component
@@ -25,14 +26,34 @@ const UserList = ({ users, isLoading }) => {
     if (node) observer.current.observe(node);
   }, []);
 
-  const selectedUsers = useSelector((state) => {
-    return state.users
+
+  const selectedCountries = useSelector((state) => {
+    return state.countriesArr
   });
   const selectedNations = useSelector((state) => {
     return state.nationsArr
   });
+  useEffect(() => {
+    setUsersToDisplay(users);
+  }, [users]);
 
-  useEffect(() => console.log(selectedUsers), [selectedUsers]);
+  useEffect(() => {
+    if (selectedCountries.length === 0) {
+      console.log(selectedCountries.length, users.length);
+      console.log(users);
+      setUsersToDisplay(users);
+
+    } else {
+      console.log("selectedCountries", selectedCountries);
+      const retval = users.filter((user) => {
+        console.log(`user.location.country`, user.location.country);
+        console.log(selectedCountries, selectedCountries.includes(user.location.country));
+        return selectedCountries.includes(user.location.country)
+      })
+      console.log(`retval`, retval);
+      setUsersToDisplay(retval)
+    }
+  }, [selectedCountries, users]);
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -59,10 +80,10 @@ const UserList = ({ users, isLoading }) => {
       label: 'Germany',
     }
   ];
-  const handleCheckBoxChange = (checkBoxValue, isChecked) => {
+  const handleCheckBoxChange = (checkBoxValue, labelValue, isChecked) => {
     dispatch({ type: isChecked ? 'ADD_NATION' : 'REMOVE_NATION', payload: checkBoxValue })
+    dispatch({ type: isChecked ? 'ADD_COUNRY' : 'REMOVE_COUNRY', payload: labelValue })
   }
-
   return (
     <S.UserList>
       <S.Filters>
@@ -71,10 +92,10 @@ const UserList = ({ users, isLoading }) => {
         )}
       </S.Filters>
       <S.List>
-        {users.map((user, index) => {
+        {usersToDisplay.map((user, index) => {
           return (
             <S.User
-              ref={index + 1 === users.length ? lastUserElementRef : null}
+              ref={index + 1 === usersToDisplay.length ? lastUserElementRef : null}
               key={index}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}

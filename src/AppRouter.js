@@ -8,8 +8,9 @@ import NavBar from "components/NavBar";
 import favoriteUsersReducer from "redux/reducers/favoriteUsersReducer"
 import pageNumberReducer from "redux/reducers/pageNumberReducer"
 import nationsReducer from "redux/reducers/nationsReducer"
+import countryReducer from "redux/reducers/countryReducer"
 
-const store = createStore(combineReducers({ favoritesUsers: favoriteUsersReducer, pageNumber: pageNumberReducer, nationsArr: nationsReducer }));
+const store = createStore(combineReducers({ favoritesUsers: favoriteUsersReducer, pageNumber: pageNumberReducer, nationsArr: nationsReducer, countriesArr: countryReducer }));
 
 const AppRouter = () => {
   return (
