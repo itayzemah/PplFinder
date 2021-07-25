@@ -25,7 +25,9 @@ const UserList = ({ users, isLoading }) => {
     if (node) observer.current.observe(node);
   }, []);
 
-
+  const nations = useSelector((state) => {
+    return state.nationsArr
+  });
   const favoritesUsers = useSelector((state) => {
     return state.favoritesUsers
   });
@@ -74,7 +76,7 @@ const UserList = ({ users, isLoading }) => {
     <S.UserList>
       <S.Filters>
         {checkboxes.map(nation =>
-          <CheckBox value={nation.value} label={nation.label} key={nation.value} onChange={handleCheckBoxChange} />
+          <CheckBox value={nation.value} label={nation.label} key={nation.value} onChange={handleCheckBoxChange} isChecked={nations.includes(nation.value)} />
         )}
       </S.Filters>
       <S.List>
