@@ -26,31 +26,26 @@ const UserList = ({ users, isLoading }) => {
     if (node) observer.current.observe(node);
   }, []);
 
-
   const selectedCountries = useSelector((state) => {
     return state.countriesArr
   });
-  const selectedNations = useSelector((state) => {
-    return state.nationsArr
+  const favoritesUsers = useSelector((state) => {
+    return state.favoritesUsers
   });
   useEffect(() => {
     setUsersToDisplay(users);
+    const favoritesUsersFromLocalStorage = JSON.parse(localStorage.getItem("favoritesUsers")) || favoritesUsers;
+    favoritesUsersFromLocalStorage.forEach(fav => dispatch({ type: 'GET_FROM_LOCAL_STORAGE', payload: favoritesUsersFromLocalStorage }))
   }, [users]);
 
   useEffect(() => {
     if (selectedCountries.length === 0) {
-      console.log(selectedCountries.length, users.length);
-      console.log(users);
       setUsersToDisplay(users);
-
     } else {
-      console.log("selectedCountries", selectedCountries);
-      const retval = users.filter((user) => {
-        console.log(`user.location.country`, user.location.country);
-        console.log(selectedCountries, selectedCountries.includes(user.location.country));
-        return selectedCountries.includes(user.location.country)
-      })
-      console.log(`retval`, retval);
+      const retval = users.filter((user) => selectedCountries.includes(user.location.country))
+      if (retval.length === 0) {
+        dispatch({ type: "INCREASE_PAGE_NUMBER" });
+      }
       setUsersToDisplay(retval)
     }
   }, [selectedCountries, users]);
@@ -58,10 +53,13 @@ const UserList = ({ users, isLoading }) => {
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
   };
-
   const handleMouseLeave = () => {
     setHoveredUserId();
   };
+  const handleMouseClick = (user) => {
+    dispatch({ type: favoritesUsers.includes(user) ? 'REMOVE_FAV_USERS' : 'SAVE_FAV_USERS', payload: user })
+  };
+
   const checkboxes = [
     {
       value: 'BR',
@@ -78,6 +76,10 @@ const UserList = ({ users, isLoading }) => {
     {
       value: 'DE',
       label: 'Germany',
+    },
+    {
+      value: 'FR',
+      label: 'France',
     }
   ];
   const handleCheckBoxChange = (checkBoxValue, labelValue, isChecked) => {
@@ -92,13 +94,14 @@ const UserList = ({ users, isLoading }) => {
         )}
       </S.Filters>
       <S.List>
-        {usersToDisplay.map((user, index) => {
+        {usersToDisplay?.map((user, index) => {
           return (
             <S.User
               ref={index + 1 === usersToDisplay.length ? lastUserElementRef : null}
               key={index}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
+              onClick={() => handleMouseClick(user)}
             >
               <S.UserPicture src={user?.picture.large} alt="" />
               <S.UserInfo>
@@ -113,7 +116,7 @@ const UserList = ({ users, isLoading }) => {
                   {user?.location.city} {user?.location.country}
                 </Text>
               </S.UserInfo>
-              <S.IconButtonWrapper isVisible={index === hoveredUserId}>
+              <S.IconButtonWrapper isVisible={index === hoveredUserId || favoritesUsers.includes(user)} >
                 <IconButton>
                   <FavoriteIcon color="error" />
                 </IconButton>

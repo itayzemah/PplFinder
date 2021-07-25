@@ -6,7 +6,6 @@ export const usePeopleFetch = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedNations, setSelectedNations] = useState([]);
-  const dispatch = useDispatch();
   const pageNumber = useSelector((state) => {
     return state.pageNumber
   });
