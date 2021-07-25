@@ -15,7 +15,6 @@ const store = createStore(combineReducers({
   favoritesUsers: favoriteUsersReducer,
   pageNumber: pageNumberReducer,
   nationsArr: nationsReducer,
-  countriesArr: countryReducer
 }));
 
 const AppRouter = () => {

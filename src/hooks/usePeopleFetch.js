@@ -5,16 +5,20 @@ import { useDispatch, useSelector } from "react-redux";
 export const usePeopleFetch = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedNations, setSelectedNations] = useState([]);
+  const dispatch = useDispatch();
   const pageNumber = useSelector((state) => {
     return state.pageNumber
   });
   const nations = useSelector((state) => {
     return state.nationsArr
   });
+
   useEffect(() => {
-    setSelectedNations(nations);
+    users.length = 0;
+    dispatch({ type: 'RESET' })
+    fetchUsers();
   }, [nations]);
+
 
   useEffect(() => {
     fetchUsers();

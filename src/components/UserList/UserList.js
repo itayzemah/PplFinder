@@ -9,7 +9,6 @@ import * as S from "./style";
 
 const UserList = ({ users, isLoading }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
-  const [usersToDisplay, setUsersToDisplay] = useState(users);
   const dispatch = useDispatch();
   //https://www.youtube.com/watch?v=NZKUirTtxcg
   const observer = useRef(); // not rendering the component
@@ -26,29 +25,15 @@ const UserList = ({ users, isLoading }) => {
     if (node) observer.current.observe(node);
   }, []);
 
-  const selectedCountries = useSelector((state) => {
-    return state.countriesArr
-  });
+
   const favoritesUsers = useSelector((state) => {
     return state.favoritesUsers
   });
+
   useEffect(() => {
-    setUsersToDisplay(users);
     const favoritesUsersFromLocalStorage = JSON.parse(localStorage.getItem("favoritesUsers")) || favoritesUsers;
     favoritesUsersFromLocalStorage.forEach(fav => dispatch({ type: 'GET_FROM_LOCAL_STORAGE', payload: favoritesUsersFromLocalStorage }))
   }, [users]);
-
-  useEffect(() => {
-    if (selectedCountries.length === 0) {
-      setUsersToDisplay(users);
-    } else {
-      const retval = users.filter((user) => selectedCountries.includes(user.location.country))
-      if (retval.length === 0) {
-        dispatch({ type: "INCREASE_PAGE_NUMBER" });
-      }
-      setUsersToDisplay(retval)
-    }
-  }, [selectedCountries, users]);
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -82,9 +67,8 @@ const UserList = ({ users, isLoading }) => {
       label: 'France',
     }
   ];
-  const handleCheckBoxChange = (checkBoxValue, labelValue, isChecked) => {
+  const handleCheckBoxChange = (checkBoxValue, isChecked) => {
     dispatch({ type: isChecked ? 'ADD_NATION' : 'REMOVE_NATION', payload: checkBoxValue })
-    dispatch({ type: isChecked ? 'ADD_COUNRY' : 'REMOVE_COUNRY', payload: labelValue })
   }
   return (
     <S.UserList>
@@ -94,10 +78,10 @@ const UserList = ({ users, isLoading }) => {
         )}
       </S.Filters>
       <S.List>
-        {usersToDisplay?.map((user, index) => {
+        {users?.map((user, index) => {
           return (
             <S.User
-              ref={index + 1 === usersToDisplay.length ? lastUserElementRef : null}
+              ref={index + 1 === users.length ? lastUserElementRef : null}
               key={index}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
