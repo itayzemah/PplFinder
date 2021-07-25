@@ -14,7 +14,7 @@ const NavBar = () => {
   };
 
   useEffect(() => {
-    if (history.location.pathname != routes[value]) {
+    if (history.location.pathname != routes[value]) { // just for refresh from HOME page.
       history.push(routes[value])
     }
   }, [value]);
