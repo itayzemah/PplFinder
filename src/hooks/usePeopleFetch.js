@@ -27,7 +27,6 @@ export const usePeopleFetch = () => {
   async function fetchUsers() {
     setIsLoading(true);
     const url = `https://randomuser.me/api/?results=5&page=${pageNumber}${nations.length !== 0 ? "&nat=" + nations.join() : ''}`;
-    console.log(`url`, url);
     const response = await axios.get(url);
     setIsLoading(false);
     setUsers([...users, ...response.data.results]);

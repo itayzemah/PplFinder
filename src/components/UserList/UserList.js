@@ -70,6 +70,7 @@ const UserList = ({ users, isLoading }) => {
     }
   ];
   const handleCheckBoxChange = (checkBoxValue, isChecked) => {
+
     dispatch({ type: isChecked ? 'ADD_NATION' : 'REMOVE_NATION', payload: checkBoxValue })
   }
   return (
